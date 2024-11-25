@@ -104,12 +104,12 @@ services:
 #      ENABLE_KEYCLOAK_API_KEYS: "true"
 #      # to enable the permissions edition UI in OE2, you need to provide a KEYCLOAK_CLIENT_SECRET
 #      KEYCLOAK_CLIENT_SECRET: "change-me-I-am-a-secret-you-get-in-keycloak-logs"
-      #KEYCLOAK_CLIENT_SECRET: "BW4jmAQXmnegXXDXKy7SPuStxSoPSG7M"
+      KEYCLOAK_CLIENT_SECRET: "efAbt0pCR7SJk00yytQt9nSM4lICUapN" # this changes after every new initialization
       PUBLIC_ORTHANC_ROOT: "http://localhost/orthanc/"
       PUBLIC_LANDING_ROOT: "http://localhost/orthanc/ui/app/token-landing.html"
       # to use OHIF-plugin:  make sure to use http://localhost/orthanc/ohif/
-      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
-#      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
+#      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
+      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
       USERS: |
         {
           "share-user": "change-me"
@@ -134,17 +134,23 @@ services:
   keycloak:
     image: orthancteam/orthanc-keycloak:24.11.0
     depends_on: [keycloak-db]
-    restart: unless-stopped
+    restart: "unless-stopped"
     environment:
       KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "change-me"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KC_SPI_THEME_WELCOME_THEME: "scim"
+      spi-realm-restapi-extension-scim-license-key: "eyJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJwYXNjYWwga251ZXBwZWwiLCJzdWIiOiIxMDc2IiwiYXVkIjoiMTA3NiIsImV4cCI6MTczMzcwMjQwMH0.Aez_FJ6ajcAJSyQZQ2OKjee7bqK5ARcJiMb25th5Gx1gR50kPv5GI9oR3x57vB6iudERDl_YqXwkPp4LKOE7VMavAJ29pW7QS6JOxWSqHXNGINA_9v5QW33rsQxjLaypsGM5mC06wBlTMkXTlRJ-KJcMIL0rV0IZ3WM9kYVgeBKr6SBr"
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-db:5432/keycloak"
       KC_DB_USERNAME: "keycloak"
       KC_DB_PASSWORD: "keycloak"
-      # KC_HOSTNAME: "https://mydomain.com/keycloak"
-    # volumes:
-    #   - /home/bc/tmp:/usr/tmp
+      #KC_HOSTNAME: "https://127.0.0.1/keycloak"
+    volumes:
+      #- /home/bc/tmp:/usr/tmp
+      - ./providers:/opt/keycloak/providers
+      - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf      
+    #TO-DO: automate building the keycloak service to pick new configs & restarting container
+    #entrypoint: ["/bin/sh", "-c", "sleep 60 && exec /opt/keycloak/bin/kc.sh build"]
 
   keycloak-db:
     image: postgres:15
