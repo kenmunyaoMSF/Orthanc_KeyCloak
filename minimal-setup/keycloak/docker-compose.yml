@@ -21,7 +21,7 @@ services:
       ENABLE_ORTHANC_TOKEN_SERVICE: "false"
       ENABLE_HTTPS: "false"
 # to use OHIF-plugin: you don't need the OHIF reverse proxy
-      ENABLE_OHIF: "true"
+#      ENABLE_OHIF: "true"
 
   orthanc:
     image: orthancteam/orthanc:24.10.3
@@ -33,7 +33,7 @@ services:
       STONE_WEB_VIEWER_PLUGIN_ENABLED: "true"
       DICOM_WEB_PLUGIN_ENABLED: "true"
       # to use OHIF-plugin:  make sure to have a "OHIF" config and use "dicom-web" source
-#      OHIF_PLUGIN_ENABLED: "true"
+      OHIF_PLUGIN_ENABLED: "true"
       ORTHANC__POSTGRESQL__HOST: "orthanc-db"
       ORTHANC__POSTGRESQL__TRANSACTION_MODE: "ReadCommitted"
       VERBOSE_ENABLED: "true"
@@ -49,8 +49,8 @@ services:
               "ShareDurations": [0, 7, 15, 30, 90, 365],
               "EnableOpenInOhifViewer3": true,
               // to use OHIF-plugin:  use http://localhost/orthanc/ohif/
-              //"OhifViewer3PublicRoot": "http://localhost/orthanc/ohif/"
-              "OhifViewer3PublicRoot": "http://localhost/ohif/"
+              "OhifViewer3PublicRoot": "http://localhost/orthanc/ohif/"
+              // "OhifViewer3PublicRoot": "http://localhost/ohif/"
             },
             "Tokens" : {
               "InstantLinksValidity": 3600,
@@ -83,10 +83,10 @@ services:
             "PublicRoot": "/orthanc/dicom-web/"
           }
           // to use OHIF-plugin:  make sure to have a "OHIF" config and use "dicom-web" source
-          //, "OHIF": {
-          //  "DataSource": "dicom-web",
-          //  "RouterBasename": "/orthanc/ohif/"
-          //}
+          , "OHIF": {
+            "DataSource": "dicom-web",
+            "RouterBasename": "/orthanc/ohif/"
+          }
         }
 
   orthanc-auth-service:
@@ -104,7 +104,7 @@ services:
 #      ENABLE_KEYCLOAK_API_KEYS: "true"
 #      # to enable the permissions edition UI in OE2, you need to provide a KEYCLOAK_CLIENT_SECRET
 #      KEYCLOAK_CLIENT_SECRET: "change-me-I-am-a-secret-you-get-in-keycloak-logs"
-      KEYCLOAK_CLIENT_SECRET: "BW4jmAQXmnegXXDXKy7SPuStxSoPSG7M"
+      #KEYCLOAK_CLIENT_SECRET: "BW4jmAQXmnegXXDXKy7SPuStxSoPSG7M"
       PUBLIC_ORTHANC_ROOT: "http://localhost/orthanc/"
       PUBLIC_LANDING_ROOT: "http://localhost/orthanc/ui/app/token-landing.html"
       # to use OHIF-plugin:  make sure to use http://localhost/orthanc/ohif/
@@ -116,19 +116,19 @@ services:
         }
 
   orthanc-db:
-    image: postgres:14
+    image: postgres:15
     restart: unless-stopped
     volumes: ["orthanc-db:/var/lib/postgresql/data"]
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
 
 # to use OHIF-plugin: you don't need this container
-  ohif:
-    image: orthancteam/ohif-v3:24.9.0
+#  ohif:
+#    image: orthancteam/ohif-v3:24.9.0
 #  uncomment if you want to customize ohif configuration
 #    volumes:
 #      - ./ohif-app-config.js:/usr/share/nginx/html/app-config.js
-    restart: unless-stopped
+#    restart: unless-stopped
 
 
   keycloak:
@@ -147,7 +147,7 @@ services:
     #   - /home/bc/tmp:/usr/tmp
 
   keycloak-db:
-    image: postgres:14
+    image: postgres:15
     restart: unless-stopped
     volumes: ["keycloak-db:/var/lib/postgresql/data"]
     environment:
