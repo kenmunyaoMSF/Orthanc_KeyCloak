@@ -149,11 +149,11 @@ services:
       - db
     expose:
       - "8080"
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.orthanc-localrouter.rule=Host(`local.kc.ocb.msf.org`)"
-#      - "traefik.http.routers.orthanc-localrouter.entrypoints=websecure"
-#      - "traefik.http.routers.orthanc-localrouter.tls.certresolver=letsencrypt_dns"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak-localrouter.rule=Host(`local.kc.ocb.msf.org`)"
+      - "traefik.http.routers.keycloak-localrouter.entrypoints=websecure"
+      - "traefik.http.routers.keycloak-localrouter.tls.certresolver=letsencrypt_dns"
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "change-me"
@@ -161,7 +161,7 @@ services:
       KC_DB_URL: "jdbc:postgresql://keycloak-db:5432/keycloak"
       KC_DB_USERNAME: "keycloak"
       KC_DB_PASSWORD: "keycloak"
-      # KC_HOSTNAME: "https://mydomain.com/keycloak"
+      KC_HOSTNAME: "https://local.kc.ocb.msf.org/"
     # volumes:
     #   - /home/bc/tmp:/usr/tmp
 
