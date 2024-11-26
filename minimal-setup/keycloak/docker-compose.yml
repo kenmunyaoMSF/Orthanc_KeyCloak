@@ -132,25 +132,17 @@ services:
 
 
   keycloak:
-    image: orthancteam/orthanc-keycloak:24.11.0
+    image: keycloak:v1
     depends_on: [keycloak-db]
     restart: "unless-stopped"
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
-      KC_SPI_THEME_WELCOME_THEME: "scim"
-      spi-realm-restapi-extension-scim-license-key: "eyJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJwYXNjYWwga251ZXBwZWwiLCJzdWIiOiIxMDc2IiwiYXVkIjoiMTA3NiIsImV4cCI6MTczMzcwMjQwMH0.Aez_FJ6ajcAJSyQZQ2OKjee7bqK5ARcJiMb25th5Gx1gR50kPv5GI9oR3x57vB6iudERDl_YqXwkPp4LKOE7VMavAJ29pW7QS6JOxWSqHXNGINA_9v5QW33rsQxjLaypsGM5mC06wBlTMkXTlRJ-KJcMIL0rV0IZ3WM9kYVgeBKr6SBr"
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-db:5432/keycloak"
       KC_DB_USERNAME: "keycloak"
       KC_DB_PASSWORD: "keycloak"
       #KC_HOSTNAME: "https://127.0.0.1/keycloak"
-    volumes:
-      #- /home/bc/tmp:/usr/tmp
-      - ./providers:/opt/keycloak/providers
-      - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf      
-    #TO-DO: automate building the keycloak service to pick new configs & restarting container
-    #entrypoint: ["/bin/sh", "-c", "sleep 60 && exec /opt/keycloak/bin/kc.sh build"]
 
   keycloak-db:
     image: postgres:15
