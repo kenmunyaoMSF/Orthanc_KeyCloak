@@ -1,5 +1,3 @@
-// "SPDX-FileCopyrightText: 2022 - 2024 Orthanc Team SRL <info@orthanc.team>"
-// SPDX-License-Identifier: CC0-1.0
 {
   "roles": {
     "admin-role": {
@@ -8,21 +6,70 @@
       ],
       "permissions": [
         "all",
-        "admin-permissions"
+        "admin-permissions"        
       ]
     },
-    "doctor-role": {
+    "workstation-role": {
+      "authorized-labels": [
+        "*"
+      ],
+      "permissions": [
+        "view"        
+      ]
+    },
+    "AGFA-NX-workstation-role": {
       "authorized-labels": [
         "*"
       ],
       "permissions": [
         "view",
-        "download",
-        "share",
-        "send"
+        "modify",
+        "upload"        
       ]
     },
-    "external-role": {
+    "orthanc-web-viewer-role": {
+      "authorized-labels": [
+        "*"
+      ],
+      "permissions": [
+        "view"
+      ]
+    },
+    "orthanc-web-administrator-role": {
+      "authorized-labels": [
+        "*"
+      ],
+      "permissions": [             
+        "view",
+        "download",
+        "delete",        
+        "modify",        
+        "upload"        
+      ]
+    },
+    "ict-officer-role": {
+      "authorized-labels": [
+        "*"
+      ],
+      "permissions": [
+        "q-r-remote-modalities"
+      ]
+    },
+    "imagery-referent-role": {
+      "authorized-labels": [
+        "external"
+      ],
+      "permissions": [               
+        "view",
+        "download",       
+        "send",
+        "modify",       
+        "upload",       
+        "settings",        
+        "share"
+      ]
+    },
+    "specialist-advisor-role": {
       "authorized-labels": [
         "external"
       ],
@@ -30,7 +77,24 @@
         "view",
         "download"
       ]
+    },
+    "project-xRay-focal-point-role": {
+      "authorized-labels": [
+        "external"
+      ],
+      "permissions": [
+        "view",
+        "modify",
+        "delete",
+        "anonymize",
+        "api-view"
+      ]
     }
   },
-  "available-labels": []
+  "available-labels": [
+    "internal",
+    "external",
+    "test-images",
+    "consultation-requested"
+  ]
 }
