@@ -109,7 +109,7 @@ services:
       PUBLIC_LANDING_ROOT: "http://localhost/orthanc/ui/app/token-landing.html"
       # to use OHIF-plugin:  make sure to use http://localhost/orthanc/ohif/
 #      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
-      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
+      #PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
       USERS: |
         {
           "share-user": "change-me"
