@@ -4,20 +4,15 @@
 
 version: "3"
 services:
-  nginx:
-    image: orthancteam/orthanc-nginx:24.11.0
-    depends_on: [orthanc, orthanc-auth-service, keycloak]
-    restart: unless-stopped
-    environment:
-      ENABLE_ORTHANC: "true"
-      ENABLE_KEYCLOAK: "true"
-      ENABLE_ORTHANC_TOKEN_SERVICE: "false"
-      ENABLE_HTTPS: "false"
-   labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.orthanc-localrouter.rule=Host(`local.pacs.ocb.msf.org`)"
-      - "traefik.http.routers.orthanc-localrouter.entrypoints=websecure"
-      - "traefik.http.routers.orthanc-localrouter.tls.certresolver=letsencrypt_dns"
+  #  nginx:
+  #   image: orthancteam/orthanc-nginx:24.11.0
+  # depends_on: [orthanc, orthanc-auth-service, keycloak]
+  # restart: unless-stopped
+  # environment:
+  #   ENABLE_ORTHANC: "true"
+  #   ENABLE_KEYCLOAK: "true"
+  #   ENABLE_ORTHANC_TOKEN_SERVICE: "false"
+  #   ENABLE_HTTPS: "false"
 
 
   orthanc:
@@ -26,6 +21,16 @@ services:
       - orthanc-storage:/var/lib/orthanc/db
     depends_on: [orthanc-db]
     restart: unless-stopped
+    expose:
+      - "8042"
+    networks:
+      - web
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.orthanc-localrouter.rule=Host(`local.pacs.ocb.msf.org`)"
+      - "traefik.http.routers.orthanc-localrouter.entrypoints=websecure"
+      - "traefik.http.routers.orthanc-localrouter.tls.certresolver=letsencrypt_dns"
     environment:
       STONE_WEB_VIEWER_PLUGIN_ENABLED: "true"
       DICOM_WEB_PLUGIN_ENABLED: "true"
@@ -86,6 +91,7 @@ services:
           }
         }
 
+
   orthanc-auth-service:
     image: orthancteam/orthanc-auth-service:24.11.0
     # always disable port mapping in production !!!
@@ -94,6 +100,10 @@ services:
     volumes:
       - ./permissions.jsonc:/orthanc_auth_service/permissions.json
     depends_on: [keycloak]
+    networks:
+      - web
+    expose:
+      - "8080"
     restart: unless-stopped
     environment:
       SECRET_KEY: "change-me-I-am-a-secret-key"
@@ -118,6 +128,8 @@ services:
     volumes: ["orthanc-db:/var/lib/postgresql/data"]
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
+    networks:
+      - db
 
 # to use OHIF-plugin: you don't need this container
 #  ohif:
@@ -132,6 +144,16 @@ services:
     image: orthancteam/orthanc-keycloak:24.11.0
     depends_on: [keycloak-db]
     restart: unless-stopped
+    networks:
+      - web
+      - db
+    expose:
+      - "8080"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.orthanc-localrouter.rule=Host(`local.kc.ocb.msf.org`)"
+#      - "traefik.http.routers.orthanc-localrouter.entrypoints=websecure"
+#      - "traefik.http.routers.orthanc-localrouter.tls.certresolver=letsencrypt_dns"
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "change-me"
@@ -147,6 +169,8 @@ services:
     image: postgres:15
     restart: unless-stopped
     volumes: ["keycloak-db:/var/lib/postgresql/data"]
+    networks:
+      - db
     environment:
       POSTGRES_PASSWORD: "keycloak"
       POSTGRES_USER: "keycloak"
@@ -156,3 +180,8 @@ volumes:
   orthanc-storage:
   orthanc-db:
   keycloak-db:
+
+networks:
+  db:
+  web:
+    external: true
