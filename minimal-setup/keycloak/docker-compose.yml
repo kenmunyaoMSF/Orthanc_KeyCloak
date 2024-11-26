@@ -4,16 +4,6 @@
 
 version: "3"
 services:
-  #  nginx:
-  #   image: orthancteam/orthanc-nginx:24.11.0
-  # depends_on: [orthanc, orthanc-auth-service, keycloak]
-  # restart: unless-stopped
-  # environment:
-  #   ENABLE_ORTHANC: "true"
-  #   ENABLE_KEYCLOAK: "true"
-  #   ENABLE_ORTHANC_TOKEN_SERVICE: "false"
-  #   ENABLE_HTTPS: "false"
-
 
   orthanc:
     image: orthancteam/orthanc:24.10.3
@@ -111,12 +101,12 @@ services:
 #      ENABLE_KEYCLOAK_API_KEYS: "true"
 #      # to enable the permissions edition UI in OE2, you need to provide a KEYCLOAK_CLIENT_SECRET
 #      KEYCLOAK_CLIENT_SECRET: "change-me-I-am-a-secret-you-get-in-keycloak-logs"
-      #KEYCLOAK_CLIENT_SECRET: "BW4jmAQXmnegXXDXKy7SPuStxSoPSG7M"
+      KEYCLOAK_CLIENT_SECRET: "efAbt0pCR7SJk00yytQt9nSM4lICUapN" # this changes after every new initialization
       PUBLIC_ORTHANC_ROOT: "http://localhost/orthanc/"
       PUBLIC_LANDING_ROOT: "http://localhost/orthanc/ui/app/token-landing.html"
       # to use OHIF-plugin:  make sure to use http://localhost/orthanc/ohif/
-      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
-#      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
+#      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
+      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
       USERS: |
         {
           "share-user": "change-me"
@@ -141,7 +131,7 @@ services:
 
 
   keycloak:
-    image: orthancteam/orthanc-keycloak:24.11.0
+    image: keycloak:v1
     depends_on: [keycloak-db]
     restart: unless-stopped
     networks:
@@ -154,9 +144,10 @@ services:
       - "traefik.http.routers.keycloak-localrouter.rule=Host(`local.kc.ocb.msf.org`)"
       - "traefik.http.routers.keycloak-localrouter.entrypoints=websecure"
       - "traefik.http.routers.keycloak-localrouter.tls.certresolver=letsencrypt_dns"
+    restart: "unless-stopped"
     environment:
       KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "change-me"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-db:5432/keycloak"
       KC_DB_USERNAME: "keycloak"
