@@ -144,7 +144,6 @@ services:
       - "traefik.http.routers.keycloak-localrouter.rule=Host(`local.kc.ocb.msf.org`)"
       - "traefik.http.routers.keycloak-localrouter.entrypoints=websecure"
       - "traefik.http.routers.keycloak-localrouter.tls.certresolver=letsencrypt_dns"
-    restart: "unless-stopped"
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
