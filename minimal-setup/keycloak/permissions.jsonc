@@ -5,46 +5,26 @@
         "*"
       ],
       "permissions": [
-        "all",
-        "admin-permissions"        
-      ]
-    },
-    "workstation-role": {
-      "authorized-labels": [
-        "*"
-      ],
-      "permissions": [
-        "view"        
-      ]
-    },
-    "AGFA-NX-workstation-role": {
-      "authorized-labels": [
-        "*"
-      ],
-      "permissions": [
-        "view",
+        "anonymize",
+        "delete",
+        "download",
         "modify",
-        "upload"        
+        "send",
+        "share",
+        "view",
+        "admin-permissions",
+        "edit-labels",
+        "q-r-remote-modalities",
+        "settings",
+        "upload"
       ]
     },
-    "orthanc-web-viewer-role": {
+    "external-role": {
       "authorized-labels": [
-        "*"
+        "external"
       ],
       "permissions": [
         "view"
-      ]
-    },
-    "orthanc-web-administrator-role": {
-      "authorized-labels": [
-        "*"
-      ],
-      "permissions": [             
-        "view",
-        "download",
-        "delete",        
-        "modify",        
-        "upload"        
       ]
     },
     "ict-officer-role": {
@@ -59,23 +39,34 @@
       "authorized-labels": [
         "external"
       ],
-      "permissions": [               
+      "permissions": [
         "view",
-        "download",       
+        "download",
         "send",
-        "modify",       
-        "upload",       
-        "settings",        
+        "modify",
+        "upload",
+        "settings",
         "share"
       ]
     },
-    "specialist-advisor-role": {
+    "orthanc-web-administrator-role": {
       "authorized-labels": [
-        "external"
+        "*"
       ],
       "permissions": [
         "view",
-        "download"
+        "download",
+        "delete",
+        "modify",
+        "upload"
+      ]
+    },
+    "orthanc-web-viewer-role": {
+      "authorized-labels": [
+        "*"
+      ],
+      "permissions": [
+        "view"
       ]
     },
     "project-xRay-focal-point-role": {
@@ -88,6 +79,23 @@
         "delete",
         "anonymize",
         "api-view"
+      ]
+    },
+    "scim-client-group-exclude": {
+      "authorized-labels": [],
+      "permissions": []
+    },
+    "scim-client-user-exclude": {
+      "authorized-labels": [],
+      "permissions": []
+    },
+    "specialist-advisor-role": {
+      "authorized-labels": [
+        "external"
+      ],
+      "permissions": [
+        "view",
+        "download"
       ]
     }
   },

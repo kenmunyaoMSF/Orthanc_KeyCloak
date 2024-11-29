@@ -22,7 +22,7 @@ services:
       - "traefik.http.routers.orthanc-localrouter.entrypoints=websecure"
       - "traefik.http.routers.orthanc-localrouter.tls.certresolver=letsencrypt_dns"
     environment:
-      STONE_WEB_VIEWER_PLUGIN_ENABLED: "true"
+      STONE_WEB_VIEWER_PLUGIN_ENABLED: "false"
       DICOM_WEB_PLUGIN_ENABLED: "true"
       # to use OHIF-plugin:  make sure to have a "OHIF" config and use "dicom-web" source
       OHIF_PLUGIN_ENABLED: "true"
@@ -41,8 +41,16 @@ services:
               "ShareDurations": [0, 7, 15, 30, 90, 365],
               "EnableOpenInOhifViewer3": true,
               // to use OHIF-plugin:  use http://localhost/orthanc/ohif/
-              "OhifViewer3PublicRoot": "http://localhost/orthanc/ohif/"
+              "OhifViewer3PublicRoot": "http://localhost/orthanc/ohif/",
               // "OhifViewer3PublicRoot": "http://localhost/ohif/"
+              "ViewersIcons" : {                
+                "ohif": "bi bi-grid",                
+                "wsi": "fa-solid fa-microscope fa-button"
+              },
+              "ViewersOrdering" : [           
+                "ohif",            
+                "wsi"
+              ]
             },
             "Tokens" : {
               "InstantLinksValidity": 3600,
@@ -59,11 +67,8 @@ services:
           "Authorization": {
             "WebServiceRootUrl": "http://orthanc-auth-service:8000/",
             "WebServiceUsername": "share-user",
-            "WebServicePassword": "change-me",
-            // to use OHIF-plugin:  make sure to include "ohif" in the list
+            "WebServicePassword": "change-me",           
             "StandardConfigurations" : [
-              "osimis-web-viewer",
-              "stone-webviewer",
               "orthanc-explorer-2",
               "ohif"
             ],
@@ -73,9 +78,8 @@ services:
           "DicomWeb": {
             "Enable": true,
             "PublicRoot": "/orthanc/dicom-web/"
-          }
-          // to use OHIF-plugin:  make sure to have a "OHIF" config and use "dicom-web" source
-          , "OHIF": {
+          }, 
+          "OHIF": {
             "DataSource": "dicom-web",
             "RouterBasename": "/orthanc/ohif/"
           }
@@ -98,15 +102,13 @@ services:
     environment:
       SECRET_KEY: "change-me-I-am-a-secret-key"
       ENABLE_KEYCLOAK: "true"
-#      ENABLE_KEYCLOAK_API_KEYS: "true"
+      ENABLE_KEYCLOAK_API_KEYS: "true"
 #      # to enable the permissions edition UI in OE2, you need to provide a KEYCLOAK_CLIENT_SECRET
 #      KEYCLOAK_CLIENT_SECRET: "change-me-I-am-a-secret-you-get-in-keycloak-logs"
-      KEYCLOAK_CLIENT_SECRET: "efAbt0pCR7SJk00yytQt9nSM4lICUapN" # this changes after every new initialization
+      KEYCLOAK_CLIENT_SECRET: "gl5UqdJ2T10fi66zMEwu9WRT2OoEqjbG" # this changes after every new initialization
       PUBLIC_ORTHANC_ROOT: "http://localhost/orthanc/"
       PUBLIC_LANDING_ROOT: "http://localhost/orthanc/ui/app/token-landing.html"
-      # to use OHIF-plugin:  make sure to use http://localhost/orthanc/ohif/
-#      PUBLIC_OHIF_ROOT: "http://localhost/ohif/"
-      #PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
+      PUBLIC_OHIF_ROOT: "http://localhost/orthanc/ohif/"
       USERS: |
         {
           "share-user": "change-me"
@@ -121,17 +123,8 @@ services:
     networks:
       - db
 
-# to use OHIF-plugin: you don't need this container
-#  ohif:
-#    image: orthancteam/ohif-v3:24.9.0
-#  uncomment if you want to customize ohif configuration
-#    volumes:
-#      - ./ohif-app-config.js:/usr/share/nginx/html/app-config.js
-#    restart: unless-stopped
-
-
   keycloak:
-    image: keycloak:v1
+    image: ghcr.io/msf-ocb/msfocb-keycloak-docker/keycloak:latest
     depends_on: [keycloak-db]
     restart: unless-stopped
     networks:
@@ -151,7 +144,14 @@ services:
       KC_DB_URL: "jdbc:postgresql://keycloak-db:5432/keycloak"
       KC_DB_USERNAME: "keycloak"
       KC_DB_PASSWORD: "keycloak"
+      #prod
       KC_HOSTNAME: "https://local.kc.ocb.msf.org/"
+      KC_HOSTNAME_URL: "https://local.kc.ocb.msf.org/"
+      KC_HOSTNAME_ADMIN_URL: "https://local.kc.ocb.msf.org/"
+      #local
+      # KC_HOSTNAME: "http://localhost/keycloak/"
+      # KC_HOSTNAME_URL: "http://localhost/keycloak/"
+      # KC_HOSTNAME_ADMIN_URL: "http://localhost/keycloak/"
     # volumes:
     #   - /home/bc/tmp:/usr/tmp
 
